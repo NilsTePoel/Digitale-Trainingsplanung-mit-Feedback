@@ -1,1 +1,1 @@
-# Digitale-Trainingsplanung-mit-Feedback
+# Digitale Trainingsplanung mit Feedback
