@@ -172,7 +172,7 @@ public class WindowSessions {
 
 		// Trainingsplan bei Doppelklick öffnen
 		table.setOnMousePressed(e -> {
-			if ((selectedSession != null && !selectedSession.getPlan().equals("null")) && (e.isPrimaryButtonDown() && e.getClickCount() == 2)) {
+			if (selectedSession != null && !selectedSession.getPlan().equals("null") && e.isPrimaryButtonDown() && e.getClickCount() == 2) {
 				FileAccess trainingPlan = new FileAccess(selectedSession.getPlan(), "Der angefügte Trainingsplan");
 				trainingPlan.open();
 			}
@@ -201,7 +201,8 @@ public class WindowSessions {
 		btnAdd.setOnAction(e -> {
 			ArrayList<String> goals = db.getGoals();
 			if (goals.isEmpty()) {
-				Alert alert = new Alert(AlertType.ERROR, "Die Liste der möglichen Trainingsziele ist leer.\nBitte legen Sie erst unter dem Menüpunkt \"Trainingsziele\" auf der Startseite die Liste der möglichen Trainingsziele fest.");
+				Alert alert = new Alert(AlertType.ERROR,
+						"Die Liste der möglichen Trainingsziele ist leer.\nBitte legen Sie erst unter dem Menüpunkt \"Trainingsziele\" auf der Startseite die Liste der möglichen Trainingsziele fest.");
 				alert.setHeaderText("Keine Trainingsziele");
 				alert.showAndWait();
 			} else {

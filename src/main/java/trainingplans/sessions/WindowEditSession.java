@@ -121,17 +121,17 @@ public class WindowEditSession {
 		mbGoals = new MenuButton();
 		mbGoals.setMaxWidth(Double.MAX_VALUE);
 		grid.add(mbGoals, 1, 3);
-		
+
 		GridPane gridPlan = new GridPane();
 		gridPlan.setHgap(10);
-		
+
 		Label lblFileName = new Label("Keine Datei ausgewählt");
 		gridPlan.add(lblFileName, 0, 0);
 
 		Button btnPlan = new Button("Trainingsplan anfügen");
 		btnPlan.setMaxWidth(Double.MAX_VALUE);
 		gridPlan.add(btnPlan, 1, 0);
-		
+
 		TitledPane tpPlan = new TitledPane("Trainingsplan", gridPlan);
 		tpPlan.setCollapsible(false);
 		grid.add(tpPlan, 0, 4, 2, 1);
@@ -164,7 +164,8 @@ public class WindowEditSession {
 		}
 
 		plan = oldData.getPlan();
-		if (!plan.equals("null")) lblFileName.setText(new File(plan).getName());
+		if (!plan.equals("null"))
+			lblFileName.setText(new File(plan).getName());
 
 		btnPlan.setOnAction(e -> {
 			FileChooser fileChooser = new FileChooser();
