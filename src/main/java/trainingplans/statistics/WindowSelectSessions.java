@@ -82,6 +82,8 @@ public class WindowSelectSessions {
 		table.setItems(sessions);
 		TableColumn<Session, String> tableColName = new TableColumn<>("Datum");
 		tableColName.setCellValueFactory(new PropertyValueFactory<>("name"));
+		TableColumn<Session, String> tableColTopic = new TableColumn<>("Trainingsschwerpunkt");
+		tableColTopic.setCellValueFactory(new PropertyValueFactory<>("topic"));
 		TableColumn<Session, Integer> tableColScope = new TableColumn<>("Umfang");
 		tableColScope.setCellValueFactory(new PropertyValueFactory<>("scope"));
 		TableColumn<Session, Integer> tableColIntensity = new TableColumn<>("Intensität");
@@ -94,7 +96,7 @@ public class WindowSelectSessions {
 		tableColTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
 		TableColumn<Session, String> tableColGoals = new TableColumn<>("Trainingsziele");
 		tableColGoals.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getGoals().toString().substring(1, p.getValue().getGoals().toString().length() - 1)));
-		table.getColumns().addAll(Arrays.asList(tableColName, tableColScope, tableColIntensity, tableColPressure, tableColAttention, tableColTotal, tableColGoals));
+		table.getColumns().addAll(Arrays.asList(tableColName, tableColTopic, tableColScope, tableColIntensity, tableColPressure, tableColAttention, tableColTotal, tableColGoals));
 		table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE); // Auswahl von mehreren Einheiten zulassen
 		gridTable.add(table, 0, 0);

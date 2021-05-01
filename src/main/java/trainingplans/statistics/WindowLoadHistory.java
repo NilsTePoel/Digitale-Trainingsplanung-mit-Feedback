@@ -80,11 +80,12 @@ public class WindowLoadHistory extends WindowStatistics {
 		seriesTotal.setName("Gesamt");
 
 		for (Session session : selectedData) {
-			seriesScope.getData().add(new XYChart.Data<>(session.getName(), session.getScope().toString()));
-			seriesIntensity.getData().add(new XYChart.Data<>(session.getName(), session.getIntensity().toString()));
-			seriesPressure.getData().add(new XYChart.Data<>(session.getName(), session.getPressure().toString()));
-			seriesAttention.getData().add(new XYChart.Data<>(session.getName(), session.getAttention().toString()));
-			seriesTotal.getData().add(new XYChart.Data<>(session.getName(), session.getTotal().toString()));
+			String label = session.getName() + " (" + session.getTopic() + ")";
+			seriesScope.getData().add(new XYChart.Data<>(label, session.getScope().toString()));
+			seriesIntensity.getData().add(new XYChart.Data<>(label, session.getIntensity().toString()));
+			seriesPressure.getData().add(new XYChart.Data<>(label, session.getPressure().toString()));
+			seriesAttention.getData().add(new XYChart.Data<>(label, session.getAttention().toString()));
+			seriesTotal.getData().add(new XYChart.Data<>(label, session.getTotal().toString()));
 		}
 
 		lineChart.getData().add(seriesScope);

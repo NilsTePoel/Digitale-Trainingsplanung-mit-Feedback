@@ -74,7 +74,7 @@ public class WindowEvaluationComparison extends WindowStatistics {
 
 		// Trainereinschätzungen
 		for (Session session : selectedData) {
-			seriesTrainer.getData().add(new XYChart.Data<>(session.getName(), session.getScope().toString()));
+			seriesTrainer.getData().add(new XYChart.Data<>(session.getName() + " (" + session.getTopic() + ")", session.getScope().toString()));
 		}
 
 		lineChart.getData().add(seriesTrainer);
@@ -89,9 +89,9 @@ public class WindowEvaluationComparison extends WindowStatistics {
 				db.searchTableEvaluations(evaluations, player, session.getName());
 				if (!evaluations.isEmpty()) {
 					Evaluation evaluation = evaluations.get(0); // Jedes Datum sollte eigentlich nur einmal vorkommen
-					seriesPlayer.getData().add(new XYChart.Data<>(evaluation.getName(), evaluation.getLoad().toString()));
+					seriesPlayer.getData().add(new XYChart.Data<>(evaluation.getName() + " (" + session.getTopic() + ")", evaluation.getLoad().toString()));
 				} else {
-					seriesPlayer.getData().add(new XYChart.Data<>(session.getName(), "Fehlt"));
+					seriesPlayer.getData().add(new XYChart.Data<>(session.getName() + " (" + session.getTopic() + ")", "Fehlt"));
 				}
 			}
 

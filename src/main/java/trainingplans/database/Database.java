@@ -21,7 +21,7 @@ import trainingplans.sessions.Session;
 import trainingplans.utils.ErrorMessage;
 
 public class Database {
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 3;
 	private final String databaseName;
 	private Connection conn;
 
@@ -51,9 +51,16 @@ public class Database {
 	private void checkVersion() {
 		int version = getVersion();
 		if (version != 0 && version != DATABASE_VERSION) {
-			Alert alert = new Alert(AlertType.WARNING, "Unbekannte Datenbankversion: " + version + ". Das Programm funktioniert möglicherweise nicht mehr korrekt.");
-			alert.setHeaderText("Unbekannte Datenbankversion");
-			alert.showAndWait();
+			if (version == 2) {
+				// Datenbank aktualisieren
+				if (TrainingPlans.debug)
+					System.out.println("Aktualisiere veraltete Datenbank.");
+				executeUpdate(new StringBuilder("ALTER TABLE Trainingseinheiten ADD COLUMN schwerpunkt text"));
+			} else {
+				Alert alert = new Alert(AlertType.WARNING, "Unbekannte Datenbankversion: " + version + ". Das Programm funktioniert möglicherweise nicht mehr korrekt.");
+				alert.setHeaderText("Unbekannte Datenbankversion");
+				alert.showAndWait();
+			}
 		}
 	}
 
@@ -62,6 +69,7 @@ public class Database {
 		querySessions.append("CREATE TABLE IF NOT EXISTS Trainingseinheiten (\n");
 		querySessions.append(" id integer PRIMARY KEY,\n");
 		querySessions.append(" name text NOT NULL,\n");
+		querySessions.append(" schwerpunkt text NOT NULL,\n");
 		querySessions.append(" umfang integer NOT NULL,\n");
 		querySessions.append(" intensitaet integer NOT NULL,\n");
 		querySessions.append(" druckbedingungen integer NOT NULL,\n");
@@ -198,9 +206,9 @@ public class Database {
 						while (rsGoals.next()) {
 							goals.add(rsGoals.getString("abkuerzung"));
 						}
-						sessions.add(new Session(rs.getInt("id"), rs.getString("name"), LoadDegree.valueOf(rs.getInt("umfang")), LoadDegree.valueOf(rs.getInt("intensitaet")),
-								LoadDegree.valueOf(rs.getInt("druckbedingungen")), LoadDegree.valueOf(rs.getInt("aufmerksamkeit")), LoadDegree.valueOf(rs.getInt("gesamt")), goals,
-								rs.getString("plan")));
+						sessions.add(new Session(rs.getInt("id"), rs.getString("name"), rs.getString("schwerpunkt"), LoadDegree.valueOf(rs.getInt("umfang")),
+								LoadDegree.valueOf(rs.getInt("intensitaet")), LoadDegree.valueOf(rs.getInt("druckbedingungen")), LoadDegree.valueOf(rs.getInt("aufmerksamkeit")),
+								LoadDegree.valueOf(rs.getInt("gesamt")), goals, rs.getString("plan")));
 						return null;
 					});
 		}
@@ -274,8 +282,10 @@ public class Database {
 
 	public void insertSession(Session session) {
 		StringBuilder query = new StringBuilder();
-		query.append("INSERT INTO Trainingseinheiten (name, umfang, intensitaet, druckbedingungen, aufmerksamkeit, gesamt, plan) VALUES('");
+		query.append("INSERT INTO Trainingseinheiten (name, schwerpunkt, umfang, intensitaet, druckbedingungen, aufmerksamkeit, gesamt, plan) VALUES('");
 		query.append(session.getName());
+		query.append("', '");
+		query.append(session.getTopic());
 		query.append("', '");
 		query.append(session.getScope().ordinal());
 		query.append("', '");
@@ -348,6 +358,8 @@ public class Database {
 		StringBuilder query = new StringBuilder();
 		query.append("UPDATE Trainingseinheiten SET name = '");
 		query.append(session.getName());
+		query.append("', schwerpunkt = '");
+		query.append(session.getTopic());
 		query.append("', umfang = '");
 		query.append(session.getScope().ordinal());
 		query.append("', intensitaet = '");

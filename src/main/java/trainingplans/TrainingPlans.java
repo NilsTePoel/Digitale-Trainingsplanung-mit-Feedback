@@ -2,6 +2,7 @@ package trainingplans;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -37,10 +38,11 @@ import trainingplans.utils.ErrorMessage;
 import trainingplans.utils.FileAccess;
 
 public class TrainingPlans extends Application {
-	private static final String VERSION = "1.0.5";
-	private static final String BUILD_DATE = "14.03.2021";
+	private static final String VERSION = "1.1.0";
+	private static final String BUILD_DATE = "01.05.2021";
 	private static final Path SETTINGS_FILE = Path.of("Einstellungen.txt");
 	private static final String DOCUMENTATION_FILE = "Dokumentation.pdf";
+	private static final String TOPICS_FILE = "Trainingsschwerpunkte und technische Elemente.pdf";
 	public static boolean debug = false;
 
 	private Database db;
@@ -63,6 +65,7 @@ public class TrainingPlans extends Application {
 
 		Menu menuHelp = new Menu("Hilfe");
 		MenuItem itemDocumentation = new MenuItem("Dokumentation");
+		itemDocumentation.setDisable(!new File(DOCUMENTATION_FILE).exists());
 		MenuItem itemInfo = new MenuItem("Info");
 		menuHelp.getItems().addAll(itemDocumentation, itemInfo);
 
@@ -100,6 +103,11 @@ public class TrainingPlans extends Application {
 		Button btnStatistics = new Button("Statistiken");
 		btnStatistics.setMaxWidth(Double.MAX_VALUE);
 		gridActions.add(btnStatistics, 0, 5);
+
+		Button btnTopics = new Button("Auswahl der Trainingsschwerpunkte und technischen Elemente");
+		btnTopics.setMaxWidth(Double.MAX_VALUE);
+		btnTopics.setDisable(!new File(TOPICS_FILE).exists());
+		gridActions.add(btnTopics, 0, 6);
 
 		borderPane.setCenter(gridActions);
 
@@ -183,6 +191,11 @@ public class TrainingPlans extends Application {
 		btnStatistics.setOnAction(e -> {
 			WindowSelectSessions windowSelectSessions = new WindowSelectSessions(db);
 			windowSelectSessions.open(stage, scene.getWidth(), scene.getHeight());
+		});
+
+		btnTopics.setOnAction(e -> {
+			FileAccess topicsList = new FileAccess(TOPICS_FILE, "Die Liste der Trainingsschwerpunkte und technischen Elemente");
+			topicsList.open();
 		});
 	}
 

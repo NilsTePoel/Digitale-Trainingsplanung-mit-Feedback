@@ -35,6 +35,7 @@ public class WindowAddSession {
 	private final String searchQuery;
 	private final ArrayList<String> goals;
 	private TextField tfName;
+	private TextField tfTopic;
 	private ToggleGroup groupScope;
 	private ToggleGroup groupIntensity;
 	private ToggleGroup groupPressure;
@@ -59,12 +60,12 @@ public class WindowAddSession {
 
 		Stage dialog = new Stage();
 		dialog.setTitle("Trainingseinheit hinzufügen");
-		Scene scene = new Scene(grid, 410, 370);
+		Scene scene = new Scene(grid, 410, 400);
 		dialog.setScene(scene);
 		dialog.initModality(Modality.WINDOW_MODAL);
 		dialog.initOwner(parent);
 		dialog.setX(parent.getX() + parent.getWidth() / 2 - 205);
-		dialog.setY(parent.getY() + parent.getHeight() / 2 - 185);
+		dialog.setY(parent.getY() + parent.getHeight() / 2 - 200);
 		dialog.setResizable(false);
 
 		Text title = new Text("Neue Trainingseinheit:");
@@ -76,6 +77,12 @@ public class WindowAddSession {
 
 		tfName = new TextField();
 		grid.add(tfName, 1, 1);
+
+		Label lblTopic = new Label("Trainingsschwerpunkt:");
+		grid.add(lblTopic, 0, 2);
+
+		tfTopic = new TextField();
+		grid.add(tfTopic, 1, 2);
 
 		GridPane gridLoad = new GridPane();
 		gridLoad.setHgap(10);
@@ -112,14 +119,14 @@ public class WindowAddSession {
 
 		TitledPane tpLoad = new TitledPane("Belastung und Beanspruchung", gridLoad);
 		tpLoad.setCollapsible(false);
-		grid.add(tpLoad, 0, 2, 2, 1);
+		grid.add(tpLoad, 0, 3, 2, 1);
 
 		Label lblGoals = new Label("Trainingsziele:");
-		grid.add(lblGoals, 0, 3);
+		grid.add(lblGoals, 0, 4);
 
 		mbGoals = new MenuButton();
 		mbGoals.setMaxWidth(Double.MAX_VALUE);
-		grid.add(mbGoals, 1, 3);
+		grid.add(mbGoals, 1, 4);
 
 		GridPane gridPlan = new GridPane();
 		gridPlan.setHgap(10);
@@ -133,10 +140,10 @@ public class WindowAddSession {
 
 		TitledPane tpPlan = new TitledPane("Trainingsplan", gridPlan);
 		tpPlan.setCollapsible(false);
-		grid.add(tpPlan, 0, 4, 2, 1);
+		grid.add(tpPlan, 0, 5, 2, 1);
 
 		Button btnAdd = new Button("Trainingseinheit hinzufügen");
-		grid.add(btnAdd, 0, 5);
+		grid.add(btnAdd, 0, 6);
 
 		dialog.show();
 
@@ -194,13 +201,13 @@ public class WindowAddSession {
 	private void insertSession(Stage dialog) {
 		List<String> goals = getSelectedItems();
 
-		if (tfName.getText().isBlank() || groupScope.getSelectedToggle() == null || groupIntensity.getSelectedToggle() == null || groupPressure.getSelectedToggle() == null
-				|| groupAttention.getSelectedToggle() == null || groupTotal.getSelectedToggle() == null || goals.isEmpty()) {
+		if (tfName.getText().isBlank() || tfTopic.getText().isBlank() || groupScope.getSelectedToggle() == null || groupIntensity.getSelectedToggle() == null
+				|| groupPressure.getSelectedToggle() == null || groupAttention.getSelectedToggle() == null || groupTotal.getSelectedToggle() == null || goals.isEmpty()) {
 			Alert alert = new Alert(AlertType.ERROR, "Es wurden noch nicht alle notwendigen Felder ausgefüllt.");
 			alert.setHeaderText("Daten unvollständig");
 			alert.showAndWait();
 		} else {
-			db.insertSession(new Session(tfName.getText(), (LoadDegree) groupScope.getSelectedToggle().getUserData(), (LoadDegree) groupIntensity.getSelectedToggle().getUserData(),
+			db.insertSession(new Session(tfName.getText(), tfTopic.getText(), (LoadDegree) groupScope.getSelectedToggle().getUserData(), (LoadDegree) groupIntensity.getSelectedToggle().getUserData(),
 					(LoadDegree) groupPressure.getSelectedToggle().getUserData(), (LoadDegree) groupAttention.getSelectedToggle().getUserData(),
 					(LoadDegree) groupTotal.getSelectedToggle().getUserData(), goals, plan));
 			db.searchTableSessions(sessions, searchQuery);
